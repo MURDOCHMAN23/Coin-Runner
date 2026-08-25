@@ -21,6 +21,9 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private PlayerHandler playerHandler;
 
+    [SerializeField]
+    private MapHandler mapHandler;
+
 
     private void Start()
     {
@@ -31,7 +34,10 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         if (gameOver)
+        {
+            HandleRestartInput();
             return;
+        }
 
         HandleInput();
         UpdateDistance();
@@ -47,6 +53,12 @@ public class GameManager : MonoBehaviour
         if (playerHandler != null)
         {
             playerHandler.Initialize(laneSpacing);
+            playerHandler.ResetPlayer();
+        }
+
+        if (mapHandler != null)
+        {
+            mapHandler.ResetGeneration();
         }
     }
 
@@ -66,6 +78,18 @@ public class GameManager : MonoBehaviour
             Keyboard.current.rightArrowKey.wasPressedThisFrame)
         {
             MoveRight();
+        }
+    }
+
+
+    private void HandleRestartInput()
+    {
+        if (Keyboard.current == null)
+            return;
+
+        if (Keyboard.current.enterKey.wasPressedThisFrame)
+        {
+            InitializeGame();
         }
     }
 
@@ -118,4 +142,9 @@ public class GameManager : MonoBehaviour
             playerHandler.SetAlive(false);
         }
     }
+
+
+    public float LaneSpacing => laneSpacing;
+    public float PlayerDistance => playerDistance;
+    public bool GameOverState => gameOver;
 }

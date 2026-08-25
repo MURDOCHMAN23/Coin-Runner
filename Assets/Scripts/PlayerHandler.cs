@@ -4,10 +4,19 @@ public class PlayerHandler : MonoBehaviour
 {
     [Header("Movement")]
     [SerializeField]
-    private float forwardSpeed = 5f;
+    private float startSpeed = 5f;
 
     [SerializeField]
-    private float laneChangeSpeed = 10f;
+    private float speedGrowthRate = 0.1f;
+
+    [SerializeField]
+    private float startSteeringSpeed = 10f;
+
+    [SerializeField]
+    private float steeringSpeedGrowthRate = 0.1f;
+
+    public float CurrentForwardSpeed { get; private set; }
+    public float CurrentSteeringSpeed { get; private set; }
 
     [Header("State")]
     [SerializeField]
@@ -18,6 +27,14 @@ public class PlayerHandler : MonoBehaviour
 
     private float laneSpacing;
     private float startingZ;
+    private Vector3 startingPosition;
+
+
+    private void Start()
+    {
+        startingPosition = transform.position;
+        startingZ = transform.position.z;
+    }
 
 
     public void Initialize(float spacing)
@@ -25,8 +42,6 @@ public class PlayerHandler : MonoBehaviour
         laneSpacing = spacing;
         currentLane = 0;
         alive = true;
-
-        startingZ = transform.position.z;
     }
 
 
@@ -42,19 +57,39 @@ public class PlayerHandler : MonoBehaviour
 
     private void MoveForward()
     {
-        transform.position += Vector3.forward * forwardSpeed * Time.deltaTime;
+        GameManager gameManager = FindFirstObjectByType<GameManager>();
+
+        CurrentForwardSpeed = startSpeed;
+
+        if (gameManager != null)
+        {
+            CurrentForwardSpeed += gameManager.PlayerDistance * speedGrowthRate;
+        }
+
+        transform.position += Vector3.forward * CurrentForwardSpeed * Time.deltaTime;
     }
 
 
     private void MoveTowardLane()
     {
+        GameManager gameManager = FindFirstObjectByType<GameManager>();
+
+        CurrentSteeringSpeed = startSteeringSpeed;
+
+        if (gameManager != null)
+        {
+            CurrentSteeringSpeed +=
+                gameManager.PlayerDistance * steeringSpeedGrowthRate;
+        }
+
         float targetX = currentLane * laneSpacing;
 
         Vector3 position = transform.position;
+
         position.x = Mathf.MoveTowards(
             position.x,
             targetX,
-            laneChangeSpeed * Time.deltaTime
+            CurrentSteeringSpeed * Time.deltaTime
         );
 
         transform.position = position;
@@ -110,5 +145,13 @@ public class PlayerHandler : MonoBehaviour
     public void SetAlive(bool state)
     {
         alive = state;
+    }
+
+
+    public void ResetPlayer()
+    {
+        transform.position = startingPosition;
+        currentLane = 0;
+        alive = true;
     }
 }
