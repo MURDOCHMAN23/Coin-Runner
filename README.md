@@ -5,9 +5,9 @@ A minigame where you collect coins and dodge obstacles in an infinite 3d runner.
 
 ## Project Status
 
-**IN PROGRESS - DEVELOPMENT**
+**PROTOTYPE COMPLETE**
 
-Currently developing the core gameplay features and mechanics outlined by the client's requirements. Issue #1 refers to in depth milestone status.
+Prototype complete game that meets client requirements.
 
 
 ## Client Requirements
