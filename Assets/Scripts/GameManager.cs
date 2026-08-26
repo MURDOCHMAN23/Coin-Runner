@@ -146,5 +146,6 @@ public class GameManager : MonoBehaviour
 
     public float LaneSpacing => laneSpacing;
     public float PlayerDistance => playerDistance;
+    public int CoinsCollected => coinsCollected;
     public bool GameOverState => gameOver;
 }

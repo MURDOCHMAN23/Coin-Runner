@@ -3,6 +3,10 @@ using TMPro;
 
 public class ScoreHandler : MonoBehaviour
 {
+    [Header("References")]
+    [SerializeField]
+    private GameManager gameManager;
+
     [Header("Testing")]
     public float distance;
     public int coinsCollected;
@@ -26,6 +30,12 @@ public class ScoreHandler : MonoBehaviour
 
     private void Update()
     {
+        if (gameManager != null)
+        {
+            distance = gameManager.PlayerDistance;
+            coinsCollected = gameManager.CoinsCollected;
+        }
+
         CalculateScore();
         UpdateUI();
     }
